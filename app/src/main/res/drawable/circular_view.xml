@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="360dp"
+    android:height="240dp"
+    android:viewportWidth="1080"
+    android:viewportHeight="720">
+
+    <!-- Rectángulo azul con arco suave abajo -->
+    <path
+        android:fillColor="#005B99"
+        android:pathData="
+            M 0,0
+            L 0,560
+            Q 540,660 1080,560
+            L 1080,0
+            Z" />
+</vector>

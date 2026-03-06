@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:background="FFFFFF">
+    <!-- separación de colores-->
+
+    <View
+        android:id="@+id/view_top"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/circular_view"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@id/view_bottom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_weight="7" />
+
+    <View
+        android:orientation="vertical"
+        android:id="@+id/view_bottom"
+        app:layout_constraintTop_toBottomOf="@id/view_top"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:background="#FFFFFF"
+        app:layout_constraintVertical_weight="1" />
+
+    <!-- boton para abrir cerrar la caja -->
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Caja fuerte - Estado"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="23dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/view_top"
+        tools:layout_editor_absoluteX="0dp"></TextView>
+
+    <View
+        android:id="@+id/button_shadow"
+        android:layout_width="280dp"
+        android:layout_height="280dp"
+        android:background="@drawable/button_shadow"
+        app:layout_constraintTop_toTopOf="@id/button"
+        app:layout_constraintBottom_toBottomOf="@id/button"
+        app:layout_constraintStart_toStartOf="@id/button"
+        app:layout_constraintEnd_toEndOf="@id/button"/>
+    <Button
+        android:id="@+id/button"
+        android:layout_width="230dp"
+        android:layout_height="230dp"
+        android:background="@drawable/rounded_button"
+        android:clipToOutline="false"
+        android:elevation="12dp"
+        android:outlineSpotShadowColor="@color/black"
+        android:outlineProvider="background"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:shadowRadius="40"
+        android:text="Activo"
+        android:textColor="#00ee84"
+        android:textSize="30sp"
+        android:translationZ="30dp"
+        app:backgroundTint="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.337"></Button>
+
+
+    <!--botones de encendido apagado-->
+
+    <!--Bottom menu-->
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="540dp"
+        android:background="@drawable/rounded_button"
+        android:drawableTop="@drawable/lockicon"
+        android:elevation="12dp"
+        android:outlineProvider="background"
+        android:outlineSpotShadowColor="@color/black"
+        android:translationZ="8dp"
+        app:backgroundTint="@null"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="280dp"
+        android:layout_marginTop="540dp"
+        android:background="@drawable/rounded_button"
+        android:drawableTop="@drawable/safeicon"
+        android:elevation="12dp"
+        android:outlineProvider="background"
+        android:outlineSpotShadowColor="@color/black"
+        android:translationZ="8dp"
+        app:backgroundTint="@null"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomMenu"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:maxHeight="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/menu" />
+</androidx.constraintlayout.widget.ConstraintLayout>
