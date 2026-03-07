@@ -67,11 +67,11 @@ fun CajaFuerteEstadoScreen(
         Text(
             text = "Caja fuerte - Estado",
             color = Color.White,
-            fontSize = 23.sp,
+            fontSize = 35.sp,
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 20.dp)
+                .padding(top =70.dp)
                 .align(Alignment.TopCenter)
         )
 
@@ -116,12 +116,12 @@ fun CajaFuerteEstadoScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             CircleIconButton(
-                size = 100.dp,
+                size = 120.dp,
                 iconRes = R.drawable.lockicon,
                 onClick = onLockClick,
             )
             CircleIconButton(
-                size = 100.dp,
+                size = 120.dp,
                 iconRes = R.drawable.safeicon,
                 onClick = onSafeClick
             )

@@ -36,28 +36,48 @@ class MainActivity : AppCompatActivity() {
         startService(intent)
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.BLUETOOTH_CONNECT), 1001)
-        }
-
-        val deviceName : String = "WeAreCharlieKirk";
-        if(connectToEsp32(deviceName)){
-            Toast.makeText(this, "Conectado a $deviceName", Toast.LENGTH_SHORT).show()
-            connected = true;
         }else{
-            Toast.makeText(this, "No se puede conectar a $deviceName", Toast.LENGTH_SHORT).show()
+            val deviceName : String = "NombreGenerico";
+            if(connectToEsp32(deviceName)){
+                Toast.makeText(this, "Conectado a $deviceName", Toast.LENGTH_SHORT).show()
+                connected = true;
+            }else{
+                Toast.makeText(this, "No se puede conectar a $deviceName", Toast.LENGTH_SHORT).show()
 
+            }
+            setContent { CajaFuerteEstadoScreen (
+                onLockClick = {
+                    sendCommand("CERRAR")
+                },
+                onSafeClick = {
+                    sendCommand("OPEN")
+                },
+            ) }
         }
-        setContent { CajaFuerteEstadoScreen (
-            onLockClick = {
-                sendCommand("CERRAR")
-            },
-            onSafeClick = {
-                sendCommand("OPEN")
-            },
-        ) }
+
+
 
     }
 
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
+        if (requestCode == 1001) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // If permission is granted, proceed with the connection
+                val deviceName: String = "DeviceName"
+                if (connectToEsp32(deviceName)) {
+                    Toast.makeText(this, "Connected to $deviceName", Toast.LENGTH_SHORT).show()
+                    connected = true
+                } else {
+                    Toast.makeText(this, "No se puede conectar a $deviceName", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                // Permission denied
+                Toast.makeText(this, "Bluetooth permission denied", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
     private fun connectToEsp32(deviceName: String) : Boolean {
         //chequear permisos
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED){
