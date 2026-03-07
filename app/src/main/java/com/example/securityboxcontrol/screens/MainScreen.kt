@@ -71,7 +71,7 @@ fun CajaFuerteEstadoScreen(
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 20.dp)
+                .padding(top =20.dp)
                 .align(Alignment.TopCenter)
         )
 

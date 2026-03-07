@@ -26,6 +26,7 @@ import android.os.IBinder
 import android.os.Looper
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.RequiresPermission
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 
@@ -37,6 +38,7 @@ class BluetoothWifiNotification : Service(){
 
     private var inputStream: InputStream? = null
     private val bluetoothReceiver = object : BroadcastReceiver() {
+        @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
         override fun onReceive(context: Context, intent: Intent) {
             val action = intent.action
             if (BluetoothAdapter.ACTION_STATE_CHANGED == action) {
@@ -62,13 +64,19 @@ class BluetoothWifiNotification : Service(){
         val deviceName: String = "WeAreCharlieKirk"
         val connected = connectToEsp32(deviceName)
         Log.d("NOTIFICATION", "LLEGO AQUI");
-        while(!connected){
-            Toast.makeText(this, "Failed to connect to $deviceName", Toast.LENGTH_SHORT).show()
-            Handler(Looper.getMainLooper()).postDelayed({
+        var passedOnce : Boolean = false
+        /*while(!connected){
+            if(!passedOnce){
+                Toast.makeText(this, "Failed to connect to $deviceName", Toast.LENGTH_SHORT).show()
+                passedOnce = true
+            }
+            var handler = Handler(Looper.getMainLooper())
+
+                handler.postDelayed({ handler.removeCallbacksAndMessages(null)
                 connectToEsp32(deviceName)
             }, 5000)
 
-        }
+        }*/
 
         //no va a avanzar aqui hasta que funcione el esp32
         Toast.makeText(this, "Connected to $deviceName", Toast.LENGTH_SHORT).show()
@@ -104,7 +112,7 @@ class BluetoothWifiNotification : Service(){
         }
 
     }
-
+    @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     private fun sendNotification(message: String) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channelId = "bluetooth_wifi_channel"
@@ -141,6 +149,7 @@ class BluetoothWifiNotification : Service(){
 
     //metodos para esp32
 
+    @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
     private fun connectToEsp32(deviceName: String): Boolean {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         if (bluetoothAdapter == null) {
