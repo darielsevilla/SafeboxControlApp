@@ -3,7 +3,6 @@
 package com.example.securityboxcontrol
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -15,7 +14,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -26,9 +24,12 @@ import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import java.io.OutputStream
+import com.example.securityboxcontrol.components.CircleIconButton
+import com.example.securityboxcontrol.components.TopBlueWave
 
 @Composable
 fun CajaFuerteEstadoScreen(
@@ -37,10 +38,12 @@ fun CajaFuerteEstadoScreen(
     onSafeClick: () -> Unit = {},
 ) {
     val blueTop = Color(0xFF23355D)
-    val background = Color(0xFFFFFFFF)
-    val activeGreen = Color(0xFF00EE84)
+    val background = Color(0xfff5f5f5)
+    val activeGreen = Color(0xFF47B977)
+    val red = Color(0xFFfe7473)
 
     var selected by remember { mutableIntStateOf(0) }
+    var isLocked by remember { mutableStateOf(false) }
 
     Box(
         modifier = modifier
@@ -88,13 +91,37 @@ fun CajaFuerteEstadoScreen(
                 .align(Alignment.Center)
                 .offset(y = (-90).dp)
         ) {
-            Box(contentAlignment = Alignment.Center) {
-                Text(
-                    text = "Activo",
-                    color = activeGreen,
-                    fontSize = 30.sp,
-                    fontWeight = FontWeight.Medium
-                )
+            // Usamos un Box para contener el Column que organizará el ícono y el texto
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                // Usamos una Column para alinear verticalmente el ícono y el texto
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center, // Alinea los elementos al principio (arriba)
+                    modifier = Modifier.fillMaxSize() // Hace que la columna ocupe todo el espacio
+                ) {
+                    // Icono de estado
+                    Icon(
+                        painter = painterResource(id = if (isLocked) R.drawable.ic_lock else R.drawable.ic_unlock),
+                        contentDescription = if (isLocked) "Locked" else "Unlocked",
+                        modifier = Modifier
+                            .size(80.dp)
+                            .align(Alignment.CenterHorizontally),
+                        tint = if (isLocked) Color.Red else activeGreen
+                    )
+                    // Texto que dice "Activo"
+                    Text(
+                        text = if (isLocked) "Cerrado" else "Abierto",
+                        color = activeGreen,
+                        fontSize = 30.sp,
+                        fontWeight = FontWeight.Medium,
+                        modifier = Modifier
+                            .padding(top = 8.dp) // Espacio entre el ícono y el texto
+                            .align(Alignment.CenterHorizontally) // Centra el texto horizontalmente
+                    )
+                }
             }
         }
 
@@ -109,13 +136,15 @@ fun CajaFuerteEstadoScreen(
         ) {
             CircleIconButton(
                 size = 120.dp,
-                iconRes = R.drawable.lockicon,
+                icon = R.drawable.ic_lock,
+                color = red,
                 onClick = onLockClick,
             )
-            Spacer(modifier = Modifier.width(40.dp)) // Espacio reducido entre los botones
+            Spacer(modifier = Modifier.width(40.dp))
             CircleIconButton(
                 size = 120.dp,
-                iconRes = R.drawable.safeicon,
+                icon = R.drawable.ic_unlock,
+                color = activeGreen,
                 onClick = onSafeClick
             )
         }
@@ -123,7 +152,7 @@ fun CajaFuerteEstadoScreen(
         // --- Bottom navigation ---
         NavigationBar(
             modifier = Modifier.align(Alignment.BottomCenter),
-            containerColor = Color(0xFFEFE7F4) // light purple-ish like screenshot
+            containerColor = Color(0xFFffffff)
         ) {
             NavigationBarItem(
                 selected = selected == 0,
@@ -149,73 +178,6 @@ fun CajaFuerteEstadoScreen(
                     Icon(imageVector = Icons.Filled.Home, contentDescription = "Info")
                 },
                 label = { Text("Info") }
-            )
-        }
-    }
-}
-
-@Composable
-private fun TopBlueWave(
-    color: Color,
-    waveHeight: androidx.compose.ui.unit.Dp,
-    modifier: Modifier = Modifier
-) {
-
-    Canvas(modifier = modifier) {
-        val w = size.width
-        val h = size.height
-        val wavePx = waveHeight.toPx()
-
-        // Fill everything blue first
-        drawRect(
-            color = color,
-            topLeft = Offset(0f, 0f),
-            size = Size(w, h)
-        )
-
-        val path = Path().apply {
-            // start at bottom-left (slightly above bottom)
-            moveTo(0f, h - wavePx)
-
-            quadraticBezierTo(
-                w / 2f, h + wavePx,
-                w, h - wavePx
-            )
-            // close the shape down to the bottom edge
-            lineTo(w, h)
-            lineTo(0f, h)
-            close()
-        }
-
-        drawPath(
-            path = path,
-            color = Color.White
-        )
-    }
-}
-
-/**
- * A circular icon button with visible shadow (like your small lock/safe buttons).
- */
-@Composable
-private fun CircleIconButton(
-    size: androidx.compose.ui.unit.Dp,
-    iconRes: Int,
-    onClick: () -> Unit
-) {
-    Surface(
-        onClick = onClick,
-        shape = CircleShape,
-        color = Color.White,
-        shadowElevation = 10.dp,
-        modifier = Modifier.size(size)
-    ) {
-        Box(contentAlignment = Alignment.Center) {
-            Image(
-                painter = painterResource(iconRes),
-                contentDescription = null,
-                contentScale = ContentScale.Fit,
-                modifier = Modifier.size(46.dp)
             )
         }
     }
