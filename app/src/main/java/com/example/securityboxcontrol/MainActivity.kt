@@ -1,54 +1,100 @@
 package com.example.securityboxcontrol
 
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothSocket
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import android.Manifest
+import android.content.Intent
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import android.view.Menu
 import android.view.MenuInflater
+import android.widget.Toast
+import androidx.activity.compose.setContent
 import com.google.android.material.bottomnavigation.BottomNavigationView
-
+import java.io.OutputStream
+import androidx.core.content.ContextCompat
+import android.content.pm.PackageManager
+import android.util.Log
+import androidx.core.app.ActivityCompat
+import com.example.securityboxcontrol.services.BluetoothWifiNotification
+import java.util.*
 class MainActivity : AppCompatActivity() {
+    private val sppUUID: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
+    private var bluetoothAdapter: BluetoothAdapter? = null
+    private var bluetoothSocket: BluetoothSocket? = null
+    private var outputStream: OutputStream? = null
+    private var connected: Boolean = false;
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        //empezar servicio de notificaciones
+        val intent = Intent(this, BluetoothWifiNotification::class.java)
+        startService(intent)
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.BLUETOOTH_CONNECT), 1001)
         }
 
+        val deviceName : String = "WeAreCharlieKirk";
+        if(connectToEsp32(deviceName)){
+            Toast.makeText(this, "Conectado a $deviceName", Toast.LENGTH_SHORT).show()
+            connected = true;
+        }else{
+            Toast.makeText(this, "No se puede conectar a $deviceName", Toast.LENGTH_SHORT).show()
 
-        val bottomMenu = findViewById<BottomNavigationView>(R.id.bottomMenu)
-
-        bottomMenu.setOnItemSelectedListener { item ->
-
-            when (item.itemId) {
-
-                R.id.home -> {
-                    println("Home pressed")
-                    true
-                }
-
-                R.id.help2 -> {
-                    println("Help pressed")
-                    true
-                }
-
-                R.id.help -> {
-                    println("Info pressed")
-                    true
-                }
-
-                else -> false
-            }
         }
+        setContent { CajaFuerteEstadoScreen (
+            onLockClick = {
+                sendCommand("CERRAR")
+            },
+            onSafeClick = {
+                sendCommand("OPEN")
+            },
+        ) }
+
     }
 
 
-    //implementar menu
+    private fun connectToEsp32(deviceName: String) : Boolean {
+        //chequear permisos
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED){
+            val pairedDevices: Set<BluetoothDevice> = bluetoothAdapter?.bondedDevices ?: return true
+            val esp32Device = pairedDevices.find { it.name == deviceName }
+            if (esp32Device == null) {
+                Toast.makeText(this, "ESP32 not paired", Toast.LENGTH_SHORT).show()
+                return false
+            }
+
+            try {
+                bluetoothSocket = esp32Device.createRfcommSocketToServiceRecord(sppUUID)
+                bluetoothSocket?.connect()
+                outputStream = bluetoothSocket?.outputStream
+                Toast.makeText(this, "Connected to $deviceName", Toast.LENGTH_SHORT).show()
+                return true
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Toast.makeText(this, "Connection failed: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+        }
+        return false
+
+
+    }
+
+    // Send command to ESP32
+    private fun sendCommand(command: String) {
+        if (outputStream == null || connected == false) {
+            Toast.makeText(this, "No esta emparejado a la caja fuerte", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val message = "$command\n"
+        outputStream?.write(message.toByteArray())
+        outputStream?.flush()
+        Toast.makeText(this, "Comando enviado: $command", Toast.LENGTH_SHORT).show()
+    }
 
 
 
