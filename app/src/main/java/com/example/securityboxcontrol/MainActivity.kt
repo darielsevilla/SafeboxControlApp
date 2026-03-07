@@ -8,17 +8,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import android.Manifest
 import android.content.Intent
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import android.view.Menu
-import android.view.MenuInflater
 import android.widget.Toast
 import androidx.activity.compose.setContent
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.io.OutputStream
 import androidx.core.content.ContextCompat
 import android.content.pm.PackageManager
-import android.util.Log
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.app.ActivityCompat
 import com.example.securityboxcontrol.services.BluetoothWifiNotification
 import java.util.*
@@ -28,6 +24,7 @@ class MainActivity : AppCompatActivity() {
     private var bluetoothSocket: BluetoothSocket? = null
     private var outputStream: OutputStream? = null
     private var connected: Boolean = false;
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -54,9 +51,6 @@ class MainActivity : AppCompatActivity() {
                 },
             ) }
         }
-
-
-
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -100,8 +94,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return false
-
-
     }
 
     // Send command to ESP32
@@ -115,9 +107,13 @@ class MainActivity : AppCompatActivity() {
         outputStream?.flush()
         Toast.makeText(this, "Comando enviado: $command", Toast.LENGTH_SHORT).show()
     }
+}
 
-
-
-
-
+@Preview(showBackground = true)
+@Composable
+fun DefaultPreview() {
+    CajaFuerteEstadoScreen(
+        onLockClick = {  },
+        onSafeClick = {  }
+    )
 }

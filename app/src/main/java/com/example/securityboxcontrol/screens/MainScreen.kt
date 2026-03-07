@@ -26,25 +26,20 @@ import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
 import java.io.OutputStream
 
-/**
- * Screen that replicates your XML layout using Jetpack Compose only.
- */
 @Composable
-
 fun CajaFuerteEstadoScreen(
     modifier: Modifier = Modifier,
     onLockClick: () -> Unit = {},
     onSafeClick: () -> Unit = {},
 ) {
-    // Colors that match your screenshot / xml
-    val blueTop = Color(0xFF005B99)
+    val blueTop = Color(0xFF23355D)
     val background = Color(0xFFFFFFFF)
     val activeGreen = Color(0xFF00EE84)
 
-
-    // For bottom nav preview behavior
     var selected by remember { mutableIntStateOf(0) }
 
     Box(
@@ -52,14 +47,12 @@ fun CajaFuerteEstadoScreen(
             .fillMaxSize()
             .background(background)
     ) {
-
         TopBlueWave(
             color = blueTop,
-
             waveHeight = 90.dp,
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.65f) // similar to your 7/1 split look
+                .fillMaxHeight(0.65f)
                 .align(Alignment.TopCenter)
         )
 
@@ -71,12 +64,11 @@ fun CajaFuerteEstadoScreen(
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top =70.dp)
+                .padding(top = 40.dp)
                 .align(Alignment.TopCenter)
         )
 
         // --- Big center circle button (with shadow) ---
-        // Shadow "halo" behind (to force that lifted look)
         Surface(
             shape = CircleShape,
             color = Color.Transparent,
@@ -84,7 +76,7 @@ fun CajaFuerteEstadoScreen(
             modifier = Modifier
                 .size(280.dp)
                 .align(Alignment.Center)
-                .offset(y = (-40).dp) // positions like your screenshot
+                .offset(y = (-90).dp)
         ) { /* empty: only shadow */ }
 
         Surface(
@@ -94,7 +86,7 @@ fun CajaFuerteEstadoScreen(
             modifier = Modifier
                 .size(230.dp)
                 .align(Alignment.Center)
-                .offset(y = (-20).dp)
+                .offset(y = (-90).dp)
         ) {
             Box(contentAlignment = Alignment.Center) {
                 Text(
@@ -106,13 +98,13 @@ fun CajaFuerteEstadoScreen(
             }
         }
 
-        // --- Two small icon circle buttons ---
+        // --- Two small icon circle buttons horizontally aligned ---
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.Center)
-                .offset(y = 260.dp), // places them in the white area under the wave
-            horizontalArrangement = Arrangement.SpaceEvenly,
+                .padding(top = 400.dp),
+            horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
             CircleIconButton(
@@ -120,6 +112,7 @@ fun CajaFuerteEstadoScreen(
                 iconRes = R.drawable.lockicon,
                 onClick = onLockClick,
             )
+            Spacer(modifier = Modifier.width(40.dp)) // Espacio reducido entre los botones
             CircleIconButton(
                 size = 120.dp,
                 iconRes = R.drawable.safeicon,
@@ -135,29 +128,32 @@ fun CajaFuerteEstadoScreen(
             NavigationBarItem(
                 selected = selected == 0,
                 onClick = { selected = 0 },
-                icon = { Icon(painterResource(R.drawable.homeicon), contentDescription = "Inicio") },
+                icon = {
+                    Icon(imageVector = Icons.Filled.Home, contentDescription = "Inicio")
+                },
                 label = { Text("Inicio") }
             )
             NavigationBarItem(
                 selected = selected == 1,
                 onClick = { selected = 1 },
-                icon = { Icon(painterResource(R.drawable.homeicon), contentDescription = "Help") },
+                icon = {
+                    Icon(imageVector = Icons.Filled.Home, contentDescription = "Help")
+                },
                 label = { Text("Help") }
             )
+
             NavigationBarItem(
                 selected = selected == 2,
                 onClick = { selected = 2 },
-                icon = { Icon(painterResource(R.drawable.homeicon), contentDescription = "Info") },
+                icon = {
+                    Icon(imageVector = Icons.Filled.Home, contentDescription = "Info")
+                },
                 label = { Text("Info") }
             )
         }
     }
 }
 
-/**
- * Draws a blue rectangle that ends in a smooth wave (arc) at the bottom.
- * This is what matches your “blue section bottom curve”.
- */
 @Composable
 private fun TopBlueWave(
     color: Color,
@@ -176,7 +172,6 @@ private fun TopBlueWave(
             topLeft = Offset(0f, 0f),
             size = Size(w, h)
         )
-
 
         val path = Path().apply {
             // start at bottom-left (slightly above bottom)
