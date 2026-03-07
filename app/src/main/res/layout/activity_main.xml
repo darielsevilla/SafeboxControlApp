@@ -8,7 +8,7 @@
     tools:context=".MainActivity"
     android:clipChildren="false"
     android:clipToPadding="false"
-    android:background="FFFFFF">
+    android:background="#FFFFFF">
     <!-- separación de colores-->
 
     <View

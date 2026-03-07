@@ -22,11 +22,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import android.Manifest
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothSocket
+import java.io.OutputStream
 
 /**
  * Screen that replicates your XML layout using Jetpack Compose only.
  */
 @Composable
+
 fun CajaFuerteEstadoScreen(
     modifier: Modifier = Modifier,
     onLockClick: () -> Unit = {},
@@ -37,6 +43,7 @@ fun CajaFuerteEstadoScreen(
     val background = Color(0xFFFFFFFF)
     val activeGreen = Color(0xFF00EE84)
 
+
     // For bottom nav preview behavior
     var selected by remember { mutableIntStateOf(0) }
 
@@ -45,18 +52,18 @@ fun CajaFuerteEstadoScreen(
             .fillMaxSize()
             .background(background)
     ) {
-        // --- Top blue section with wave bottom ---
+
         TopBlueWave(
             color = blueTop,
-            // Control how "deep" the wave is
+
             waveHeight = 90.dp,
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.70f) // similar to your 7/1 split look
+                .fillMaxHeight(0.65f) // similar to your 7/1 split look
                 .align(Alignment.TopCenter)
         )
 
-        // --- Title ---
+        // Titulo
         Text(
             text = "Caja fuerte - Estado",
             color = Color.White,
@@ -87,7 +94,7 @@ fun CajaFuerteEstadoScreen(
             modifier = Modifier
                 .size(230.dp)
                 .align(Alignment.Center)
-                .offset(y = (-40).dp)
+                .offset(y = (-20).dp)
         ) {
             Box(contentAlignment = Alignment.Center) {
                 Text(
@@ -104,14 +111,14 @@ fun CajaFuerteEstadoScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.Center)
-                .offset(y = 220.dp), // places them in the white area under the wave
+                .offset(y = 260.dp), // places them in the white area under the wave
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
             CircleIconButton(
                 size = 100.dp,
                 iconRes = R.drawable.lockicon,
-                onClick = onLockClick
+                onClick = onLockClick,
             )
             CircleIconButton(
                 size = 100.dp,
@@ -157,6 +164,7 @@ private fun TopBlueWave(
     waveHeight: androidx.compose.ui.unit.Dp,
     modifier: Modifier = Modifier
 ) {
+
     Canvas(modifier = modifier) {
         val w = size.width
         val h = size.height
