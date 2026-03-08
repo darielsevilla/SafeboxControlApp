@@ -31,16 +31,18 @@ import java.io.OutputStream
 import com.example.securityboxcontrol.components.CircleIconButton
 import com.example.securityboxcontrol.components.TopBlueWave
 
+// Colores
+import com.example.securityboxcontrol.theme.Gris
+import com.example.securityboxcontrol.theme.Azul
+import com.example.securityboxcontrol.theme.Verde
+import com.example.securityboxcontrol.theme.Rojo
+
 @Composable
 fun CajaFuerteEstadoScreen(
     modifier: Modifier = Modifier,
     onLockClick: () -> Unit = {},
     onSafeClick: () -> Unit = {},
 ) {
-    val blueTop = Color(0xFF23355D)
-    val background = Color(0xfff5f5f5)
-    val activeGreen = Color(0xFF47B977)
-    val red = Color(0xFFfe7473)
 
     var selected by remember { mutableIntStateOf(0) }
     var isLocked by remember { mutableStateOf(false) }
@@ -48,10 +50,10 @@ fun CajaFuerteEstadoScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(background)
+            .background(Gris)
     ) {
         TopBlueWave(
-            color = blueTop,
+            color = Azul,
             waveHeight = 90.dp,
             modifier = Modifier
                 .fillMaxWidth()
@@ -106,12 +108,12 @@ fun CajaFuerteEstadoScreen(
                         modifier = Modifier
                             .size(80.dp)
                             .align(Alignment.CenterHorizontally),
-                        tint = if (isLocked) Color.Red else activeGreen
+                        tint = if (isLocked) Color.Red else Verde
                     )
 
                     Text(
                         text = if (isLocked) "Cerrado" else "Abierto",
-                        color = activeGreen,
+                        color = Verde,
                         fontSize = 30.sp,
                         fontWeight = FontWeight.Medium,
                         modifier = Modifier
@@ -148,7 +150,7 @@ fun CajaFuerteEstadoScreen(
                         CircleIconButton(
                             size = 140.dp,
                             icon = R.drawable.ic_lock,
-                            color = red,
+                            color = Rojo,
                             onClick = onLockClick,
                         )
                         Text(
@@ -174,7 +176,7 @@ fun CajaFuerteEstadoScreen(
                         CircleIconButton(
                             size = 140.dp,
                             icon = R.drawable.ic_unlock,
-                            color = activeGreen,
+                            color = Verde,
                             onClick = onSafeClick
                         )
                         Text(
