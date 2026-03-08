@@ -13,9 +13,24 @@ import androidx.activity.compose.setContent
 import java.io.OutputStream
 import androidx.core.content.ContextCompat
 import android.content.pm.PackageManager
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.securityboxcontrol.screens.DeviceConnectScreen
 import com.example.securityboxcontrol.services.BluetoothWifiNotification
 import java.util.*
 class MainActivity : AppCompatActivity() {
@@ -25,46 +40,66 @@ class MainActivity : AppCompatActivity() {
     private var outputStream: OutputStream? = null
     private var connected: Boolean = false;
 
+
+    //nombre del esp32
+    private val deviceName: String = "NombreGenerico";
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         //empezar servicio de notificaciones
         val intent = Intent(this, BluetoothWifiNotification::class.java)
         startService(intent)
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.BLUETOOTH_CONNECT), 1001)
-        }else{
-            val deviceName : String = "NombreGenerico";
-            if(connectToEsp32(deviceName)){
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.BLUETOOTH_CONNECT
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.BLUETOOTH_CONNECT),
+                1001
+            )
+        } else {
+
+            if (connectToEsp32()) {
                 Toast.makeText(this, "Conectado a $deviceName", Toast.LENGTH_SHORT).show()
                 connected = true;
-            }else{
-                Toast.makeText(this, "No se puede conectar a $deviceName", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "No se puede conectar a $deviceName", Toast.LENGTH_SHORT)
+                    .show()
 
             }
-            setContent { CajaFuerteEstadoScreen (
-                onLockClick = {
-                    sendCommand("CERRAR")
-                },
-                onSafeClick = {
-                    sendCommand("OPEN")
-                },
-            ) }
+            setContent {
+                Navigation()
+                /*CajaFuerteEstadoScreen(
+                    onLockClick = {
+                        sendCommand("CERRAR")
+                    },
+                    onSafeClick = {
+                        sendCommand("OPEN")
+                    },
+                )*/
+            }
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         if (requestCode == 1001) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // If permission is granted, proceed with the connection
                 val deviceName: String = "DeviceName"
-                if (connectToEsp32(deviceName)) {
+                if (connectToEsp32()) {
                     Toast.makeText(this, "Connected to $deviceName", Toast.LENGTH_SHORT).show()
                     connected = true
                 } else {
-                    Toast.makeText(this, "No se puede conectar a $deviceName", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "No se puede conectar a $deviceName", Toast.LENGTH_SHORT)
+                        .show()
                 }
             } else {
                 // Permission denied
@@ -72,9 +107,14 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-    private fun connectToEsp32(deviceName: String) : Boolean {
+
+    private fun connectToEsp32(): Boolean {
         //chequear permisos
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED){
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.BLUETOOTH_CONNECT
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
             val pairedDevices: Set<BluetoothDevice> = bluetoothAdapter?.bondedDevices ?: return true
             val esp32Device = pairedDevices.find { it.name == deviceName }
             if (esp32Device == null) {
@@ -108,7 +148,79 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, "Comando enviado: $command", Toast.LENGTH_SHORT).show()
     }
 
+    @Composable
+    private fun Navigation() {
+        val navController = rememberNavController() // Create a NavController
 
+        Scaffold(
+            bottomBar = {
+                NavigationBar(
+                    containerColor = Color(0xFFffffff)
+                ) {
+                    NavigationBarItem(
+                        selected = false,
+                        onClick = { navController.navigate("Conexión") },
+                        icon = {
+                            Image(
+                                painter = painterResource(id = R.drawable.homeicon),
+                                contentDescription = "Conexión",
+                                modifier = Modifier.size(24.dp)
+                            )
+                        },
+                        label = { Text("Conexión") }
+                    )
+                    NavigationBarItem(
+                        selected = false,
+                        onClick = { navController.navigate("Inicio") },
+                        icon = {
+                            Image(
+                                painter = painterResource(id = R.drawable.homeicon),
+                                contentDescription = "Inicio",
+                                modifier = Modifier.size(24.dp)
+                            )
+                        },
+                        label = { Text("Inicio") }
+                    )
+                    NavigationBarItem(
+                        selected = false,
+                        onClick = { navController.navigate("info") },
+                        icon = {  Image(
+                            painter = painterResource(id = R.drawable.homeicon),
+                            contentDescription = "Home",
+                            modifier = Modifier.size(24.dp)
+                        ) },
+                        label = { Text("Info") }
+                    )
+                }
+            }
+        ) { innerPadding ->
+            NavHost(
+                navController = navController,
+                startDestination = "Inicio", // Set default screen to "home"
+                modifier = Modifier.padding(innerPadding)
+            ) {
+                // Define composable screens here, each referencing the respective composable function
+                composable("Conexión") {
+                    var connectVal = 2
+                    if(connected) connectVal = 0
+                    DeviceConnectScreen(connectVal = connectVal, connectFunc ={connected : Int -> connectToEsp32() })
+                }
+                composable("Inicio") {
+                    CajaFuerteEstadoScreen(
+                        onLockClick = {
+                            sendCommand("CERRAR")
+                        },
+                        onSafeClick = {
+                            sendCommand("OPEN")
+                        },
+                    )
+                }
+                composable("info") {
+
+                }
+            }
+        }
+    }
     
 }
 

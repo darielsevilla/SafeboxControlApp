@@ -40,24 +40,16 @@ import com.example.securityboxcontrol.R
 @Composable
 fun DeviceConnectScreen(modifier: Modifier = Modifier,
                         deviceName: String = "-----",
-                        connectVal: Int,
-                        connectFunc: () -> Boolean = {true}){
+                        connectVal: Int = 2,
+                        connectFunc: (par:Int) -> Boolean = {true}){
     //connected: 0-> conectado, 1->conectandose, 2-> no conectado
-    var bgColor = Color(0xFF005B99)
+    var bgColor = Color(0xFF23355D)
     var cardColor = Color(0xFFFFF)
     var connected = connectVal
     Column(modifier = modifier
         .fillMaxSize()
         .background(bgColor)
-        .padding(20.dp, 40.dp, 20.dp, 20.dp)
-        .clickable{
-            connected = 1
-            if(connectFunc()){
-                connected = 0
-            }else{
-                connected = 2
-            }
-        },
+        .padding(20.dp, 40.dp, 20.dp, 20.dp),
         verticalArrangement = Arrangement.spacedBy(15.dp)){
         Text(
             text = "Caja fuerte - Conexión",
@@ -80,7 +72,15 @@ fun DeviceConnectScreen(modifier: Modifier = Modifier,
                     .height(300.dp)
                     .padding(10.dp, 0.dp)
                     .shadow(14.dp, MaterialTheme.shapes.medium)
-
+                    .clickable{
+                        var previousConnect = connected
+                        connected = 1
+                        if(connectFunc(previousConnect) && previousConnect == 2){
+                            connected = 0
+                        }else{
+                            connected = 2
+                        }
+                    }
 
                 ,
 
