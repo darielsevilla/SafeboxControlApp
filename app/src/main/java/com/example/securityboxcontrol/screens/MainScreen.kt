@@ -25,8 +25,8 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
+//import androidx.compose.material.icons.Icons
+//import androidx.compose.material.icons.filled.Home
 import java.io.OutputStream
 import com.example.securityboxcontrol.components.CircleIconButton
 import com.example.securityboxcontrol.components.TopBlueWave
@@ -150,7 +150,7 @@ fun CajaFuerteEstadoScreen(
         }
 
         // --- Bottom navigation ---
-        NavigationBar(
+       /*NavigationBar(
             modifier = Modifier.align(Alignment.BottomCenter),
             containerColor = Color(0xFFffffff)
         ) {
@@ -179,7 +179,7 @@ fun CajaFuerteEstadoScreen(
                 },
                 label = { Text("Info") }
             )
-        }
+        }*/
     }
 }
 
