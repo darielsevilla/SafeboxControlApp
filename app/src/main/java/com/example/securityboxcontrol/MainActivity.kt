@@ -150,7 +150,7 @@ class MainActivity : AppCompatActivity() {
 
     @Composable
     private fun Navigation() {
-        val navController = rememberNavController() // Create a NavController
+        val navController = rememberNavController()
 
         Scaffold(
             bottomBar = {
@@ -162,9 +162,9 @@ class MainActivity : AppCompatActivity() {
                         onClick = { navController.navigate("Conexión") },
                         icon = {
                             Image(
-                                painter = painterResource(id = R.drawable.homeicon),
+                                painter = painterResource(id = R.drawable.ic_link),
                                 contentDescription = "Conexión",
-                                modifier = Modifier.size(24.dp)
+                                modifier = Modifier.size(30.dp)
                             )
                         },
                         label = { Text("Conexión") }
@@ -174,9 +174,9 @@ class MainActivity : AppCompatActivity() {
                         onClick = { navController.navigate("Inicio") },
                         icon = {
                             Image(
-                                painter = painterResource(id = R.drawable.homeicon),
+                                painter = painterResource(id = R.drawable.ic_home),
                                 contentDescription = "Inicio",
-                                modifier = Modifier.size(24.dp)
+                                modifier = Modifier.size(30.dp)
                             )
                         },
                         label = { Text("Inicio") }
@@ -184,11 +184,13 @@ class MainActivity : AppCompatActivity() {
                     NavigationBarItem(
                         selected = false,
                         onClick = { navController.navigate("info") },
-                        icon = {  Image(
-                            painter = painterResource(id = R.drawable.homeicon),
-                            contentDescription = "Home",
-                            modifier = Modifier.size(24.dp)
-                        ) },
+                        icon = {
+                            Image(
+                                painter = painterResource(id = R.drawable.ic_notification),
+                                contentDescription = "Info",
+                                modifier = Modifier.size(30.dp),
+                            )
+                        },
                         label = { Text("Info") }
                     )
                 }
@@ -216,12 +218,10 @@ class MainActivity : AppCompatActivity() {
                     )
                 }
                 composable("info") {
-
                 }
             }
         }
     }
-    
 }
 
 @Preview(showBackground = true)

@@ -1,5 +1,6 @@
 package com.example.securityboxcontrol.components
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -19,12 +20,15 @@ fun CircleIconButton(
     color: Color,
     onClick: () -> Unit
 ) {
+
     Surface(
         onClick = onClick,
         shape = CircleShape,
         color = Color.White,
-        shadowElevation = 10.dp,
-        modifier = Modifier.size(size)
+        shadowElevation = 8.dp,
+        modifier = Modifier
+            .size(size)
+            .border(10.dp, color, CircleShape)
     ) {
         Box(contentAlignment = Alignment.Center) {
             Icon(
