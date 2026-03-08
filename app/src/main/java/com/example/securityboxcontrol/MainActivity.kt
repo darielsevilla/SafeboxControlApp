@@ -24,13 +24,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.securityboxcontrol.screens.DeviceConnectScreen
+import com.example.securityboxcontrol.screens.AlertasScreen
 import com.example.securityboxcontrol.services.BluetoothWifiNotification
 import java.util.*
 class MainActivity : AppCompatActivity() {
@@ -92,7 +92,6 @@ class MainActivity : AppCompatActivity() {
 
         if (requestCode == 1001) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // If permission is granted, proceed with the connection
                 val deviceName: String = "DeviceName"
                 if (connectToEsp32()) {
                     Toast.makeText(this, "Connected to $deviceName", Toast.LENGTH_SHORT).show()
@@ -102,7 +101,6 @@ class MainActivity : AppCompatActivity() {
                         .show()
                 }
             } else {
-                // Permission denied
                 Toast.makeText(this, "Bluetooth permission denied", Toast.LENGTH_SHORT).show()
             }
         }
@@ -183,22 +181,22 @@ class MainActivity : AppCompatActivity() {
                     )
                     NavigationBarItem(
                         selected = false,
-                        onClick = { navController.navigate("info") },
+                        onClick = { navController.navigate("Alertas") },
                         icon = {
                             Image(
                                 painter = painterResource(id = R.drawable.ic_notification),
-                                contentDescription = "Info",
+                                contentDescription = "Alertas",
                                 modifier = Modifier.size(30.dp),
                             )
                         },
-                        label = { Text("Info") }
+                        label = { Text("Alertas") }
                     )
                 }
             }
         ) { innerPadding ->
             NavHost(
                 navController = navController,
-                startDestination = "Inicio", // Set default screen to "home"
+                startDestination = "Inicio",
                 modifier = Modifier.padding(innerPadding)
             ) {
                 // Define composable screens here, each referencing the respective composable function
@@ -217,18 +215,10 @@ class MainActivity : AppCompatActivity() {
                         },
                     )
                 }
-                composable("info") {
+                composable("Alertas") {
+                    AlertasScreen()
                 }
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    CajaFuerteEstadoScreen(
-        onLockClick = {  },
-        onSafeClick = {  }
-    )
 }
