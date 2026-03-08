@@ -107,6 +107,9 @@ class MainActivity : AppCompatActivity() {
         outputStream?.flush()
         Toast.makeText(this, "Comando enviado: $command", Toast.LENGTH_SHORT).show()
     }
+
+
+    
 }
 
 @Preview(showBackground = true)
