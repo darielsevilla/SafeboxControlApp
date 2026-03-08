@@ -80,7 +80,7 @@ fun CajaFuerteEstadoScreen(
                 .size(280.dp)
                 .align(Alignment.Center)
                 .offset(y = (-90).dp)
-        ) { /* empty: only shadow */ }
+        ) { }
 
         Surface(
             shape = CircleShape,
@@ -91,18 +91,15 @@ fun CajaFuerteEstadoScreen(
                 .align(Alignment.Center)
                 .offset(y = (-90).dp)
         ) {
-            // Usamos un Box para contener el Column que organizará el ícono y el texto
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier.fillMaxSize()
             ) {
-                // Usamos una Column para alinear verticalmente el ícono y el texto
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center, // Alinea los elementos al principio (arriba)
-                    modifier = Modifier.fillMaxSize() // Hace que la columna ocupe todo el espacio
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier.fillMaxSize()
                 ) {
-                    // Icono de estado
                     Icon(
                         painter = painterResource(id = if (isLocked) R.drawable.ic_lock else R.drawable.ic_unlock),
                         contentDescription = if (isLocked) "Locked" else "Unlocked",
@@ -111,75 +108,89 @@ fun CajaFuerteEstadoScreen(
                             .align(Alignment.CenterHorizontally),
                         tint = if (isLocked) Color.Red else activeGreen
                     )
-                    // Texto que dice "Activo"
+
                     Text(
                         text = if (isLocked) "Cerrado" else "Abierto",
                         color = activeGreen,
                         fontSize = 30.sp,
                         fontWeight = FontWeight.Medium,
                         modifier = Modifier
-                            .padding(top = 8.dp) // Espacio entre el ícono y el texto
-                            .align(Alignment.CenterHorizontally) // Centra el texto horizontalmente
+                            .padding(top = 8.dp)
+                            .align(Alignment.CenterHorizontally)
                     )
                 }
             }
         }
 
-        // --- Two small icon circle buttons horizontally aligned ---
-        Row(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.Center)
-                .padding(top = 400.dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxSize()
+                .padding(top = 500.dp),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            CircleIconButton(
-                size = 120.dp,
-                icon = R.drawable.ic_lock,
-                color = red,
-                onClick = onLockClick,
-            )
-            Spacer(modifier = Modifier.width(40.dp))
-            CircleIconButton(
-                size = 120.dp,
-                icon = R.drawable.ic_unlock,
-                color = activeGreen,
-                onClick = onSafeClick
-            )
+            Spacer(modifier = Modifier.weight(1f))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.CenterHorizontally),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        CircleIconButton(
+                            size = 140.dp,
+                            icon = R.drawable.ic_lock,
+                            color = red,
+                            onClick = onLockClick,
+                        )
+                        Text(
+                            text = "Bloquear",
+                            color = Color.Gray,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Medium,
+                            modifier = Modifier
+                                .padding(top = 8.dp)
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.width(60.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        CircleIconButton(
+                            size = 140.dp,
+                            icon = R.drawable.ic_unlock,
+                            color = activeGreen,
+                            onClick = onSafeClick
+                        )
+                        Text(
+                            text = "Desbloquear",
+                            color = Color.Gray,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Medium,
+                            modifier = Modifier
+                                .padding(top = 8.dp)
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.weight(1f)) // Este Spacer empuja los botones hacia el centro
         }
-
-        // --- Bottom navigation ---
-       /*NavigationBar(
-            modifier = Modifier.align(Alignment.BottomCenter),
-            containerColor = Color(0xFFffffff)
-        ) {
-            NavigationBarItem(
-                selected = selected == 0,
-                onClick = { selected = 0 },
-                icon = {
-                    Icon(imageVector = Icons.Filled.Home, contentDescription = "Inicio")
-                },
-                label = { Text("Inicio") }
-            )
-            NavigationBarItem(
-                selected = selected == 1,
-                onClick = { selected = 1 },
-                icon = {
-                    Icon(imageVector = Icons.Filled.Home, contentDescription = "Help")
-                },
-                label = { Text("Help") }
-            )
-
-            NavigationBarItem(
-                selected = selected == 2,
-                onClick = { selected = 2 },
-                icon = {
-                    Icon(imageVector = Icons.Filled.Home, contentDescription = "Info")
-                },
-                label = { Text("Info") }
-            )
-        }*/
     }
 }
 
