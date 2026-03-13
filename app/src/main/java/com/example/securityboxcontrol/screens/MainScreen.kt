@@ -34,12 +34,12 @@ import com.example.securityboxcontrol.theme.Rojo
 @Composable
 fun CajaFuerteEstadoScreen(
     modifier: Modifier = Modifier,
+    isLocked: Boolean,
     onLockClick: () -> Unit = {},
     onSafeClick: () -> Unit = {},
 ) {
 
     var selected by remember { mutableIntStateOf(0) }
-    var isLocked by remember { mutableStateOf(false) }
 
     Box(
         modifier = modifier
@@ -195,6 +195,6 @@ fun CajaFuerteEstadoScreen(
 @Composable
 private fun CajaFuerteEstadoScreenPreview() {
     MaterialTheme {
-        CajaFuerteEstadoScreen()
+        CajaFuerteEstadoScreen(isLocked = false);
     }
 }

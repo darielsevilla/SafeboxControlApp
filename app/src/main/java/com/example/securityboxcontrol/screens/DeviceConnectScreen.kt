@@ -45,7 +45,7 @@ fun DeviceConnectScreen(
     modifier: Modifier = Modifier,
     deviceName: String = "-----",
     connectVal: Int = 2,
-    connectFunc: (par: Int) -> Boolean = { true }
+    connectFunc: ()-> Unit = {}
 ) {
     val blueGradient = Brush.verticalGradient(
         colors = listOf(
@@ -55,7 +55,7 @@ fun DeviceConnectScreen(
         )
     )
 
-    var connected by remember { mutableStateOf(connectVal) }
+    //var connected by remember { mutableStateOf(connectVal) }
 
     // Animación Lottie
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.connection_wave))
@@ -109,21 +109,14 @@ fun DeviceConnectScreen(
                             ambientColor = Color(0xFF0066CC).copy(alpha = 0.3f)
                         )
                         .clickable {
-                            val previousConnect = connected
-                            if (connectFunc(previousConnect) && previousConnect == 2) {
-                                connected = 0
-                            } else if (previousConnect == 0) {
-                                connected = 2
-                            } else {
-                                connected = 2
-                            }
+                            connectFunc();
                         }
                 ) {
                     Box(
                         contentAlignment = Alignment.Center,
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        when (connected) {
+                        when (connectVal) {
                             0 -> {
                                 Column(
                                     horizontalAlignment = Alignment.CenterHorizontally,

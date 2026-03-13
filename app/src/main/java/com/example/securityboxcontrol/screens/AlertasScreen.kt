@@ -1,5 +1,9 @@
 package com.example.securityboxcontrol.screens
 
+import android.content.Context
+import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,6 +33,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.securityboxcontrol.R
 import androidx.compose.foundation.clickable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat.getSystemService
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.LottieCompositionSpec
@@ -36,6 +43,9 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.securityboxcontrol.theme.RojoClaro
 import com.example.securityboxcontrol.theme.RojoMedio
 import com.example.securityboxcontrol.theme.RojoOscuro
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 
 // Gradiente rojo para fondo
 val RedGradient = Brush.verticalGradient(
@@ -49,12 +59,50 @@ val RedGradient = Brush.verticalGradient(
 @Composable
 fun AlertasScreen(
     modifier: Modifier = Modifier,
-    onSafeClick: () -> Unit = {}
+    buzzerActive: Boolean,
+    onSafeClick: () -> Unit
 ) {
     val composition by rememberLottieComposition(
         LottieCompositionSpec.RawRes(R.raw.bell_alert)
     )
+    val context = LocalContext.current
+    // Vibrate the device for a given duration (default 200ms)
+    fun Context.vibrateDevice(duration: Long = 200) {
+        val v = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            v.vibrate(VibrationEffect.createOneShot(duration, VibrationEffect.DEFAULT_AMPLITUDE))
+        } else {
+            @Suppress("DEPRECATION")
+            v.vibrate(duration)
+        }
+    }
 
+    // Launch vibration when buzzer is active (infinite animation)
+    LaunchedEffect(buzzerActive) {
+        if (buzzerActive) {
+            // Start the vibration for 20 seconds
+            val vibratorJob = launch {
+                while(buzzerActive){
+                    context.vibrateDevice(1000)
+                    delay(1000)
+                }
+                 // Keep vibrating for 20 seconds
+            }
+
+            // If buzzerActive becomes false, cancel the vibration immediately
+            launch {
+                while (isActive) {
+                    if (!buzzerActive) {
+                        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                        vibrator.cancel()
+                        vibratorJob.cancel()
+                        break;
+                    }
+                    delay(100) // Check every 100ms
+                }
+            }
+        }
+    }
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -78,19 +126,39 @@ fun AlertasScreen(
             )
 
             // Animación Lottie bell_alert
-            LottieAnimation(
-                composition = composition,
-                modifier = Modifier
-                    .size(300.dp)
-                    .shadow(
-                        elevation = 20.dp,
-                        shape = CircleShape,
-                        spotColor = RojoClaro.copy(alpha = 0.5f),
-                        ambientColor = RojoOscuro.copy(alpha = 0.3f)
-                    ),
-                iterations = LottieConstants.IterateForever,
-                speed = 1f
-            )
+            if(buzzerActive){
+                LottieAnimation(
+                    composition = composition,
+                    modifier = Modifier
+                        .size(300.dp)
+                        .shadow(
+                            elevation = 20.dp,
+                            shape = CircleShape,
+                            spotColor = RojoClaro.copy(alpha = 0.5f),
+                            ambientColor = RojoOscuro.copy(alpha = 0.3f)
+                        ),
+                    iterations = LottieConstants.IterateForever,
+                    speed = 1f
+                )
+            }else{
+                LottieAnimation(
+                    composition = composition,
+                    modifier = Modifier
+                        .size(300.dp)
+                        .shadow(
+                            elevation = 20.dp,
+                            shape = CircleShape,
+                            spotColor = RojoClaro.copy(alpha = 0.5f),
+                            ambientColor = RojoOscuro.copy(alpha = 0.3f)
+
+
+                        ),
+                    iterations = 1,
+                    speed = 1f
+
+                )
+
+            }
 
             Spacer(modifier = Modifier.height(40.dp))
 
@@ -118,6 +186,7 @@ fun AlertasScreen(
                         spotColor = Color(0xFFFFB800).copy(alpha = 0.5f)
                     )
                     .clickable { onSafeClick() }
+
             ) {
                 Box(
                     contentAlignment = Alignment.Center
@@ -138,6 +207,6 @@ fun AlertasScreen(
 @Composable
 private fun SOSScreenPreview() {
     MaterialTheme {
-        AlertasScreen()
+        AlertasScreen(buzzerActive = false, onSafeClick = {});
     }
 }
