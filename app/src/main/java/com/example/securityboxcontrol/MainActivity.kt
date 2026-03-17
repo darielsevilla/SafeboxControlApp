@@ -118,6 +118,54 @@ class MainActivity : AppCompatActivity() {
             startScanning()
         }
     }
+    override fun onStop() {
+        super.onStop()
+        try {
+            bluetoothGatt?.disconnect()
+            bluetoothGatt?.close()
+            bluetoothGatt = null
+        }catch(e : SecurityException){
+
+        }
+    }
+    override fun onPause() {
+        super.onPause()
+        if (bluetoothGatt != null) {
+            try{
+            val deviceAddress = bluetoothGatt?.device?.address
+            val sharedPreferences = getSharedPreferences("BluetoothPrefs", MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+            editor.putString("deviceAddress", deviceAddress)  // Save device address
+            editor.apply()
+
+            bluetoothGatt?.disconnect()
+            bluetoothGatt?.close()
+            bluetoothGatt = null
+        }catch(e: SecurityException){
+
+        }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        try {
+            // Restore the GATT connection using the saved device address
+            val sharedPreferences = getSharedPreferences("BluetoothPrefs", MODE_PRIVATE)
+            val deviceAddress = sharedPreferences.getString("deviceAddress", null)
+
+            if (deviceAddress != null) {
+                val device = bluetoothAdapter?.getRemoteDevice(deviceAddress)
+                if (device != null) {
+                    // Attempt to reconnect to the device
+                    bluetoothGatt = device.connectGatt(this, false, gattCallback)
+                    Log.d("Bluetooth", "Reconnected to device: $deviceAddress")
+                }
+            }
+        }catch(e: SecurityException){
+
+        }
+    }
 
     // Permissions result handling
     override fun onRequestPermissionsResult(
@@ -281,7 +329,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        override fun onDescriptorWrite(
+
+
+            override fun onDescriptorWrite(
             gatt: BluetoothGatt,
             descriptor: BluetoothGattDescriptor,
             status: Int
