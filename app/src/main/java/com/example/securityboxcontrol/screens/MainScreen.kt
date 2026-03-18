@@ -38,9 +38,6 @@ fun CajaFuerteEstadoScreen(
     onLockClick: () -> Unit = {},
     onSafeClick: () -> Unit = {},
 ) {
-
-    var selected by remember { mutableIntStateOf(0) }
-
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -57,17 +54,18 @@ fun CajaFuerteEstadoScreen(
 
         // Titulo
         Text(
-            text = "Caja fuerte - Estado",
+            text = "ESTADO",
             color = Color.White,
-            fontSize = 35.sp,
+            fontSize = 36.sp,
+            fontWeight = FontWeight.Bold,
+            letterSpacing = 8.sp,
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 40.dp)
+                .padding(top = 50.dp)
                 .align(Alignment.TopCenter)
         )
 
-        // --- Big center circle button (with shadow) ---
         Surface(
             shape = CircleShape,
             color = Color.Transparent,
@@ -98,16 +96,16 @@ fun CajaFuerteEstadoScreen(
                 ) {
                     Icon(
                         painter = painterResource(id = if (isLocked) R.drawable.ic_lock else R.drawable.ic_unlock),
-                        contentDescription = if (isLocked) "Locked" else "Unlocked",
+                        contentDescription = if (isLocked) "Cerrado" else "Abierto",
                         modifier = Modifier
                             .size(80.dp)
                             .align(Alignment.CenterHorizontally),
-                        tint = if (isLocked) Color.Red else Verde
+                        tint = if (isLocked) Rojo else Verde
                     )
 
                     Text(
                         text = if (isLocked) "Cerrado" else "Abierto",
-                        color = Verde,
+                        color = if (isLocked) Rojo else Verde,
                         fontSize = 30.sp,
                         fontWeight = FontWeight.Medium,
                         modifier = Modifier
@@ -146,9 +144,10 @@ fun CajaFuerteEstadoScreen(
                             icon = R.drawable.ic_lock,
                             color = Rojo,
                             onClick = onLockClick,
+                            enabled = !isLocked,
                         )
                         Text(
-                            text = "Bloquear",
+                            text = "Cerrar",
                             color = Color.Gray,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Medium,
@@ -171,10 +170,11 @@ fun CajaFuerteEstadoScreen(
                             size = 140.dp,
                             icon = R.drawable.ic_unlock,
                             color = Verde,
-                            onClick = onSafeClick
+                            onClick = onSafeClick,
+                            enabled = isLocked,
                         )
                         Text(
-                            text = "Desbloquear",
+                            text = "Abrir",
                             color = Color.Gray,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Medium,

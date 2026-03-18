@@ -39,8 +39,8 @@ fun Context.showEsp32AlertNotification(message: String) {
         Log.d("Notification", "Llego a intent")
         val intent = Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            putExtra("navigate_to", "Alertas")
         }
-
 
         val pendingIntent = PendingIntent.getActivity(
             this,
@@ -51,7 +51,7 @@ fun Context.showEsp32AlertNotification(message: String) {
 
         Log.d("Notification", "Llego a notificación")
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_launcher_foreground) // puedes cambiarlo luego por un icono de notificación
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle("Caja fuerte")
             .setContentText(message)
             .setPriority(NotificationCompat.PRIORITY_HIGH)

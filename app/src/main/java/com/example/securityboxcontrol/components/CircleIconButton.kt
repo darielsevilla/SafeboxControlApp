@@ -9,34 +9,41 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun CircleIconButton(
-    size: androidx.compose.ui.unit.Dp,
+    size: Dp,
     icon: Int,
     color: Color,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    enabled: Boolean = true,
 ) {
-
     Surface(
         onClick = onClick,
+        enabled = enabled,
         shape = CircleShape,
         color = Color.White,
         shadowElevation = 8.dp,
         modifier = Modifier
             .size(size)
-            .border(10.dp, color, CircleShape)
+            .alpha(if (enabled) 1f else 0.5f)
+            .border(
+                width = 10.dp,
+                color = if (enabled) color else Color.Gray,
+                shape = CircleShape
+            )
     ) {
         Box(contentAlignment = Alignment.Center) {
             Icon(
                 painter = painterResource(icon),
-                contentDescription = "Locked",
-                modifier = Modifier
-                    .size(60.dp),
-                tint = color
+                contentDescription = null,
+                modifier = Modifier.size(60.dp),
+                tint = if (enabled) color else Color.Gray
             )
         }
     }

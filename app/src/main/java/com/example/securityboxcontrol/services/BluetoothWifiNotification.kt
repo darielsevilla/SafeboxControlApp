@@ -42,7 +42,7 @@ class BluetoothWifiNotification : Service() {
         val notification: Notification = NotificationCompat.Builder(this, FOREGROUND_CHANNEL_ID)
             .setContentTitle("Security Box Control")
             .setContentText("Bluetooth monitoring active")
-            .setSmallIcon(R.drawable.ic_launcher_foreground) // replace later with your own notification icon if you want
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setOngoing(true)
             .build()
 
