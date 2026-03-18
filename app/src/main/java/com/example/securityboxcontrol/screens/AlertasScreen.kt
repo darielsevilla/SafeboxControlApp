@@ -150,8 +150,6 @@ fun AlertasScreen(
                             shape = CircleShape,
                             spotColor = RojoClaro.copy(alpha = 0.5f),
                             ambientColor = RojoOscuro.copy(alpha = 0.3f)
-
-
                         ),
                     iterations = 1,
                     speed = 1f
@@ -164,7 +162,7 @@ fun AlertasScreen(
 
             // Texto informativo
             Text(
-                text = "Alerta SOS enviada a tus acompañantes.",
+                text = "¡Se ha intentado abrir la caja fuerte!",
                 color = Color.White,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Medium,

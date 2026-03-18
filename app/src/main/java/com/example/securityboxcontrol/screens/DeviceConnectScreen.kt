@@ -79,18 +79,19 @@ fun DeviceConnectScreen(
                 fontWeight = FontWeight.Bold,
                 letterSpacing = 8.sp,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(bottom = 40.dp)
+                modifier = Modifier
+                    .padding(top = 50.dp)
             )
 
             Box(
-                modifier = Modifier.size(550.dp),
+                modifier = Modifier.size(500.dp),
                 contentAlignment = Alignment.Center
             ) {
                 // Animación Lottie
                 LottieAnimation(
                     composition = composition,
                     modifier = Modifier
-                        .size(550.dp)
+                        .size(500.dp)
                         .align(Alignment.Center),
                     iterations = LottieConstants.IterateForever,
                     speed = 1f
@@ -192,6 +193,8 @@ fun DeviceConnectScreen(
                 modifier = Modifier
                     .fillMaxWidth(0.85f)
             )
+
+            Spacer(modifier = Modifier.height(60.dp))
         }
     }
 }

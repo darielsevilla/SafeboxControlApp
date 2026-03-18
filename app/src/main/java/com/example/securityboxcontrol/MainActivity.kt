@@ -32,6 +32,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -527,27 +528,27 @@ class MainActivity : AppCompatActivity() {
                         },
                         label = { Text("Inicio") }
                     )
-                    NavigationBarItem(
-                        selected = false,
-                        onClick = { navController.navigate("Alertas") },
-                        icon = {
-                            Image(
-                                painter = painterResource(id = R.drawable.ic_notification),
-                                contentDescription = "Alertas",
-                                modifier = Modifier.size(30.dp),
-                            )
-                        },
-                        label = { Text("Alertas") }
-                    )
                 }
             }
         ) { innerPadding ->
+            val navTarget = intent?.getStringExtra("navigate_to")
+
+            LaunchedEffect(navTarget) {
+                if (navTarget == "Alertas") {
+                    navController.navigate("Alertas") {
+                        launchSingleTop = true
+                    }
+                    intent?.removeExtra("navigate_to")
+                }
+            }
+
             NavHost(
                 navController = navController,
                 startDestination = "Inicio",
                 modifier = Modifier.padding(innerPadding)
-            ) {
-                // Define composable screens here, each referencing the respective composable function
+            )
+
+            {
                 composable("Conexión") {
 
                     DeviceConnectScreen(connectVal = connectedVal, connectFunc = {
