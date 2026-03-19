@@ -183,8 +183,9 @@ fun AlertasScreen(
                         shape = RoundedCornerShape(50.dp),
                         spotColor = Color(0xFFFFB800).copy(alpha = 0.5f)
                     )
-                    .clickable { onSafeClick() }
-
+                    .clickable {
+                        onSafeClick()
+                    }
             ) {
                 Box(
                     contentAlignment = Alignment.Center

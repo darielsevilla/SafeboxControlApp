@@ -466,7 +466,7 @@ class MainActivity : AppCompatActivity() {
         var serviceUID = "4fafc201-1fb5-459e-8fcc-c5c9c331914b";
         var lockCharacteristicUID ="beb5483e-36e1-4688-b7f5-ea07361b26a7";
         try {
-            Log.d("ScanResult", "LLego a apagar alarma. comando: ${command}")
+            Log.d("ScanResult", "Llegó a apagar alarma. comando: ${command}")
             var characteristic = bluetoothGatt?.getService(UUID.fromString(serviceUID))
                 ?.getCharacteristic(UUID.fromString(lockCharacteristicUID));
             if (characteristic != null) {
@@ -580,13 +580,19 @@ class MainActivity : AppCompatActivity() {
                     )
                 }
                 composable("Alertas") {
-                    AlertasScreen(buzzerActive = buzzerActive, onSafeClick = {
-                        if(buzzerActive){
-                            apagarAlarma("STOP");
-                        }else{
-                            apagarAlarma("START");
+                    AlertasScreen(
+                        buzzerActive = true,
+                        onSafeClick = {
+
+                                apagarAlarma("STOP")
+
+
+                            navController.navigate("Inicio") {
+                                popUpTo("Alertas") { inclusive = true }
+                                launchSingleTop = true
+                            }
                         }
-                    })
+                    )
                 }
             }
         }
